@@ -1,0 +1,11 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  data:
+    mongodb:
+      uri:
+  liquibase:
+    enabled: true
+    change-log: classpath:liquibase/db.changelog.yaml
+internal:
+  internal-secret: ${INTERNAL_SECRET}

@@ -1,0 +1,53 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001
+      author: vyacheslav
+      changes:
+        - createCollection:
+            collectionName: payments
+            options:
+              validator:
+                $jsonSchema:
+                  bsonType: "object"
+                  required:
+                    - order_id
+                    - user_id
+                    - status
+                    - timestamp
+                    - payment_amount
+                  properties:
+                    id:
+                      bsonType: long
+                    order_id:
+                      bsonType: long
+                      description: "Id of the order"
+                    user_id:
+                      bsonType: long
+                      description: "ID of the user"
+                    status:
+                      bsonType: string
+                      description: "Payment status"
+                    timestamp:
+                      bsonType: date
+                      description: "Payment creation time"
+                    payment_amount:
+                      bsonType: double
+                      description: "Amount of the payment"
+        - createIndex:
+            collectionName: payments
+            keys:
+              order_id: 1
+            options:
+              name: idx_payments_order_id
+        - createIndex:
+            collectionName: payments
+            keys:
+              user_id: 1
+            options:
+              name: idx_payments_user_id
+        - createIndex:
+            collectionName: payments
+            keys:
+              status: 1
+            options:
+              name: idx_payments_status
