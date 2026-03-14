@@ -1,6 +1,8 @@
 package com.shop.paymentservice.controller;
 
 import com.shop.paymentservice.exception.ExceptionBody;
+import com.shop.paymentservice.exception.ExternalServiceException;
+import com.shop.paymentservice.exception.ExternalServiceUnavailableException;
 import com.shop.paymentservice.exception.ResourceNotFoundException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,6 +23,16 @@ public class ControllerAdvice {
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionBody> handleResourceNotFound(ResourceNotFoundException e){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ExceptionBody(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExternalServiceUnavailableException.class)
+    public ResponseEntity<ExceptionBody> handleExternalServiceUnavailable(ExternalServiceUnavailableException e){
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ExceptionBody(e.getMessage()));
+    }
+
+    @ExceptionHandler(ExternalServiceException.class)
+    public ResponseEntity<ExceptionBody> handleExternalService(ExternalServiceException e){
+        return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ExceptionBody(e.getMessage()));
     }
 
     @ExceptionHandler(AccessDeniedException.class)

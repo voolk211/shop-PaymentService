@@ -1,6 +1,5 @@
 package com.shop.paymentservice.service;
 
-import com.shop.paymentservice.model.dto.PaymentDto;
 import com.shop.paymentservice.model.entities.Payment;
 import com.shop.paymentservice.model.entities.PaymentStatus;
 import org.springframework.data.domain.Page;

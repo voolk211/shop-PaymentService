@@ -4,8 +4,32 @@ spring:
   data:
     mongodb:
       uri:
+  cloud:
+    openfeign:
+      client:
+        config:
+          random-number:
+            connect-timeout: 3000
+            read-timeout: 5000
+      circuitbreaker:
+        enabled: true
   liquibase:
     enabled: true
     change-log: classpath:liquibase/db.changelog.yaml
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      random-number:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 10
+        permitted-number-of-calls-in-half-open-state: 3
+
 internal:
   internal-secret: ${INTERNAL_SECRET}
+
+external:
+  random-number-api:
+    url: https://www.randomnumberapi.com/api/v1.0/random
