@@ -1,11 +1,18 @@
 server:
   port: ${PAYMENT_SERVICE_PORT}
+
 gateway:
   url: http://localhost:8080
+
 spring:
   data:
     mongodb:
       uri:
+
+external:
+  random-number-api:
+    url: ${EXTERNAL_API_URL}
+
 springdoc:
   swagger-ui:
     path: /swagger-ui.html

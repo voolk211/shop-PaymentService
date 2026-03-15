@@ -14,7 +14,7 @@ import java.util.List;
 )
 public interface ExternalClient {
 
-    @GetMapping
+    @GetMapping("/random")
     List<Long> getRandomNumber();
 
 }

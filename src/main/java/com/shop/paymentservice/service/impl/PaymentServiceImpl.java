@@ -5,8 +5,10 @@ import com.shop.paymentservice.exception.ExternalServiceException;
 import com.shop.paymentservice.model.entities.Payment;
 import com.shop.paymentservice.model.entities.PaymentStatus;
 import com.shop.paymentservice.model.entities.TotalSumOfPayments;
+import com.shop.paymentservice.model.events.PaymentEvent;
 import com.shop.paymentservice.repository.PaymentRepository;
 import com.shop.paymentservice.service.PaymentService;
+import com.shop.paymentservice.service.kafka.PaymentKafkaProducer;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -35,25 +37,28 @@ public class PaymentServiceImpl implements PaymentService {
 
     private final ExternalClient externalClient;
 
+    private final PaymentKafkaProducer kafkaProducer;
+
     @Override
     public Payment createPayment(Payment payment) {
 
         List<Long> numbers = externalClient.getRandomNumber();
 
-        if (numbers == null ||numbers.isEmpty()) {
+        if (numbers == null || numbers.isEmpty()) {
             throw new ExternalServiceException("Random number service returned empty exception");
         }
 
         Long number = numbers.getFirst();
 
-        if (number % 2 == 0) {
-            payment.setStatus(PaymentStatus.SUCCESS);
-        }
-        else {
-            payment.setStatus(PaymentStatus.FAILED);
-        }
+        payment.setStatus(number % 2 == 0 ? PaymentStatus.SUCCESS : PaymentStatus.FAILED);
 
-        return paymentRepository.save(payment);
+        Payment savedPayment =  paymentRepository.save(payment);
+
+        kafkaProducer.sendPaymentEvent(new PaymentEvent(
+                savedPayment.getOrderId(),
+                savedPayment.getStatus()
+        ));
+        return savedPayment;
     }
 
     @Override
