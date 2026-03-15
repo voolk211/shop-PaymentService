@@ -1,9 +1,11 @@
 spring:
   config:
     import: optional:file:.env[.properties]
-  data:
-    mongodb:
-      uri:
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration
   cloud:
     openfeign:
       client:
@@ -14,13 +16,14 @@ spring:
       circuitbreaker:
         enabled: true
   liquibase:
-    enabled: true
-    change-log: classpath:liquibase/db.changelog.yaml
+    enabled: false
   kafka:
-    bootstrap-servers: localhost:9092
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      properties:
+        spring.json.add.type.headers: false
     topics:
       payment-events: payment-events
 
@@ -39,4 +42,4 @@ internal:
 
 external:
   random-number-api:
-    url: ${EXTERNAL_API_URL}
+    url: ${EXTERNAL_API_URL:https://www.randomnumberapi.com/api/v1.0}

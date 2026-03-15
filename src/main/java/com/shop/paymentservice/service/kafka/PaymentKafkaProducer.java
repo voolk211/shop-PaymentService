@@ -33,7 +33,6 @@ public class PaymentKafkaProducer {
                         result.getRecordMetadata().offset());
             }
         });
-
     }
 
 }

@@ -2,12 +2,12 @@ server:
   port: ${PAYMENT_SERVICE_PORT}
 
 gateway:
-  url: http://localhost:8080
+  url: ${GATEWAY_URL:http://localhost:8080}
 
 spring:
   data:
     mongodb:
-      uri:
+      uri: ${MONGODB_URI}
 
 external:
   random-number-api:

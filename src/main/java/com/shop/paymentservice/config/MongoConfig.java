@@ -24,7 +24,6 @@ public class MongoConfig {
 
     @WritingConverter
     static class BigDecimalDecimal128Converter implements Converter<BigDecimal, Decimal128> {
-
         @Override
         public Decimal128 convert(BigDecimal source) {
             return new Decimal128(source);
@@ -33,7 +32,6 @@ public class MongoConfig {
 
     @ReadingConverter
     static class Decimal128BigDecimalConverter implements Converter<Decimal128, BigDecimal> {
-
         @Override
         public BigDecimal convert(Decimal128 source) {
             return source.bigDecimalValue();

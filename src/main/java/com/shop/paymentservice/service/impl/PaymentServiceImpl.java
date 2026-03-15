@@ -45,7 +45,7 @@ public class PaymentServiceImpl implements PaymentService {
         List<Long> numbers = externalClient.getRandomNumber();
 
         if (numbers == null || numbers.isEmpty()) {
-            throw new ExternalServiceException("Random number service returned empty exception");
+            throw new ExternalServiceException("Random number service returned empty response");
         }
 
         Long number = numbers.getFirst();
@@ -91,7 +91,7 @@ public class PaymentServiceImpl implements PaymentService {
                 Aggregation.match(new Criteria().andOperator(criteriaList)),
                 Aggregation.group().sum("payment_amount").as("totalSumOfPayments")
         );
-        AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, "payments", TotalSumOfPayments.class);
+        AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Payment.class), TotalSumOfPayments.class);
         return Optional.ofNullable(results.getUniqueMappedResult())
                 .map(TotalSumOfPayments::getTotalSumOfPayments)
                 .orElse(BigDecimal.ZERO);
@@ -110,7 +110,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         Aggregation aggregation = Aggregation.newAggregation(operations);
 
-        AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, "payments", TotalSumOfPayments.class);
+        AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Payment.class), TotalSumOfPayments.class);
         return Optional.ofNullable(results.getUniqueMappedResult())
                 .map(TotalSumOfPayments::getTotalSumOfPayments)
                 .orElse(BigDecimal.ZERO);

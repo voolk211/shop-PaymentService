@@ -36,7 +36,6 @@ public class GatewayAuthFilter extends OncePerRequestFilter {
             return;
         }
 
-
         String userId = request.getHeader("X-User-Id");
         String rolesHeader = request.getHeader("X-Roles");
         String secretHeader = request.getHeader("X-Internal-Auth");

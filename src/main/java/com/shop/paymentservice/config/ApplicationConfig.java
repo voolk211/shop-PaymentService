@@ -1,7 +1,6 @@
 package com.shop.paymentservice.config;
 
 import com.shop.paymentservice.filter.GatewayAuthFilter;
-import feign.RequestInterceptor;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;

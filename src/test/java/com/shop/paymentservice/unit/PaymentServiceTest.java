@@ -36,7 +36,6 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.anyString;
 import static org.mockito.Mockito.mock;
 
-
 @ExtendWith(MockitoExtension.class)
 public class PaymentServiceTest {
 
@@ -169,6 +168,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForUser_WhenPaymentsExist_ShouldReturnSum() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         TotalSumOfPayments totalSumOfPayments = new TotalSumOfPayments();
         totalSumOfPayments.setTotalSumOfPayments(new BigDecimal("150.00"));
 
@@ -192,6 +192,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForUser_WhenNoPayments_ShouldReturnZero() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         AggregationResults<TotalSumOfPayments> aggregationResults =
                 mock(AggregationResults.class);
         when(aggregationResults.getUniqueMappedResult()).thenReturn(null);
@@ -210,6 +211,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForUser_WhenOnlyFromProvided_ShouldReturnSum() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         TotalSumOfPayments totalSumOfPayments = new TotalSumOfPayments();
         totalSumOfPayments.setTotalSumOfPayments(new BigDecimal("75.00"));
 
@@ -233,6 +235,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForAllUsers_WhenPaymentsExist_ShouldReturnSum() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         TotalSumOfPayments totalSumOfPayments = new TotalSumOfPayments();
         totalSumOfPayments.setTotalSumOfPayments(new BigDecimal("500.00"));
 
@@ -255,6 +258,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForAllUsers_WhenNoDateRange_ShouldReturnTotalSum() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         TotalSumOfPayments totalSumOfPayments = new TotalSumOfPayments();
         totalSumOfPayments.setTotalSumOfPayments(new BigDecimal("1000.00"));
 
@@ -274,6 +278,7 @@ public class PaymentServiceTest {
 
     @Test
     void getTotalSumOfPaymentsForAllUsers_WhenNoPayments_ShouldReturnZero() {
+        when(mongoTemplate.getCollectionName(Payment.class)).thenReturn("payments");
         AggregationResults<TotalSumOfPayments> aggregationResults =
                 mock(AggregationResults.class);
         when(aggregationResults.getUniqueMappedResult()).thenReturn(null);
