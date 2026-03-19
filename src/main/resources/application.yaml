@@ -25,7 +25,7 @@ spring:
       properties:
         spring.json.add.type.headers: false
     topics:
-      payment-events: payment-events
+      payment-events: queuing.payment.created
 
 resilience4j:
   circuitbreaker:
