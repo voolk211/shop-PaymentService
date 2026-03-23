@@ -272,9 +272,8 @@ public class PaymentControllerIntegrationTest extends AbstractIntegrationTest {
         org.bson.Document raw = mongoTemplate.getCollection("payments")
                 .find()
                 .first();
-        System.out.println("Raw MongoDB document: " + raw.toJson());
 
-        mockMvc.perform(get("/api/payments/summary/1")
+        mockMvc.perform(get("/api/payments/1/summary")
                         .with(withUserHeaders(1L, "USER")))
                 .andExpect(status().isOk())
                 .andExpect(content().string("200.00"));
@@ -282,7 +281,7 @@ public class PaymentControllerIntegrationTest extends AbstractIntegrationTest {
 
     @Test
     void getTotalSumForUser_WhenNoPayments_ShouldReturnZero() throws Exception {
-        mockMvc.perform(get("/api/payments/summary/1")
+        mockMvc.perform(get("/api/payments/1/summary")
                         .with(withUserHeaders(1L, "USER")))
                 .andExpect(status().isOk())
                 .andExpect(content().string("0"));
@@ -298,11 +297,7 @@ public class PaymentControllerIntegrationTest extends AbstractIntegrationTest {
                         .content(objectMapper.writeValueAsString(validPaymentCreateDto(1L, 1L))))
                 .andExpect(status().isCreated());
 
-        List<Payment> all = paymentRepository.findAll();
-        System.out.println("Payments in DB: " + all);
-        System.out.println("Count: " + all.size());
-
-        mockMvc.perform(get("/api/payments/summary/1")
+        mockMvc.perform(get("/api/payments/1/summary")
                         .with(withUserHeaders(1L, "USER"))
                         .param("from", LocalDateTime.now().minusDays(1)
                                 .format(DateTimeFormatter.ISO_DATE_TIME))

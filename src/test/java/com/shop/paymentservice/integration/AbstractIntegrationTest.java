@@ -33,8 +33,7 @@ public abstract class AbstractIntegrationTest {
 
     @Container
     static KafkaContainer kafka =
-            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0")
-                    .asCompatibleSubstituteFor("apache/kafka"));
+            new KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.0"));
 
     @Container
     static GenericContainer<?> wiremock =

@@ -29,7 +29,7 @@ databaseChangeLog:
                       bsonType: date
                       description: "Payment creation time"
                     payment_amount:
-                      bsonType: decimal
+                      bsonType: decimal128
                       description: "Amount of the payment"
 
   - changeSet:
@@ -55,3 +55,11 @@ databaseChangeLog:
         - runCommand:
             command: >
               { createIndexes: "payments", indexes: [{ key: { status: 1 }, name: "idx_payments_status" }] }
+
+  - changeSet:
+      id: 005
+      author: vyacheslav
+      changes:
+        - runCommand:
+            command: >
+              { createIndexes: "payments", indexes: [{ key: { timestamp: 1 }, name: "idx_payments_timestamp" }] }

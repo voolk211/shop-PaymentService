@@ -34,14 +34,14 @@ public class PaymentController {
 
     private final PaymentMapper paymentMapper;
 
-    @PreAuthorize("hasRole('ADMIN') or (#paymentDto.userId != null and #paymentDto.userId == authentication.principal)")
+    @PreAuthorize("hasRole('ADMIN') or (#paymentDto.userId != null and #paymentDto.userId.equals(authentication.principal))")
     @PostMapping
     public ResponseEntity<PaymentResponseDto> createPayment(@Valid @RequestBody PaymentCreateDto paymentDto) {
         Payment payment = paymentService.createPayment(paymentMapper.toEntity(paymentDto));
         return ResponseEntity.status(HttpStatus.CREATED).body(paymentMapper.toResponseDto(payment));
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (#userId != null and #userId == authentication.principal)")
+    @PreAuthorize("hasRole('ADMIN') or (#userId != null and #userId.equals(authentication.principal))")
     @GetMapping
     public ResponseEntity<Page<PaymentResponseDto>> getPayments(
             @RequestParam(required = false) Long orderId,
@@ -53,8 +53,8 @@ public class PaymentController {
 
     }
 
-    @PreAuthorize("hasRole('ADMIN') or (#userId != null and #userId == authentication.principal)")
-    @GetMapping("/summary/{userId}")
+    @PreAuthorize("hasRole('ADMIN') or (#userId != null and #userId.equals(authentication.principal))")
+    @GetMapping("/{userId}/summary")
     public ResponseEntity<BigDecimal> getTotalSumOfPaymentsForUser(
             @PathVariable Long userId,
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) @RequestParam(required = false) LocalDateTime from,

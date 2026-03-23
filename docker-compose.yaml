@@ -5,6 +5,7 @@ services:
     env_file:
       - .env
     build: .
+    image: payment-service:latest
     container_name: paymentService
     depends_on:
       mongodb:
@@ -17,7 +18,7 @@ services:
       - MONGODB_URI=mongodb://mongodb:27017/payments
       - SPRING_KAFKA_BOOTSTRAP_SERVERS=kafka:9092
       - EXTERNAL_API_URL=https://www.randomnumberapi.com/api/v1.0
-      - INTERNAL_INTERNAL_SECRET=${INTERNAL_SECRET}
+      - INTERNAL_SECRET=${INTERNAL_SECRET}
       - SPRING_PROFILES_ACTIVE=docker
       - PAYMENT_SERVICE_PORT=8080
   mongodb:

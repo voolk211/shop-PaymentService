@@ -20,10 +20,15 @@ spring:
   kafka:
     bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
     producer:
+      acks: all
       key-serializer: org.apache.kafka.common.serialization.StringSerializer
       value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
       properties:
         spring.json.add.type.headers: false
+        retry.backoff.ms: 1000
+        request.timeout.ms: 5000
+        delivery.timeout.ms: 10000
     topics:
       payment-events: queuing.payment.created
 

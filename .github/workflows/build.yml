@@ -46,4 +46,6 @@ jobs:
           DOCKER_API_VERSION: '1.44'
         run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=voolk211_shop-PaymentService
       - name: Build Docker image
-        run: docker build -t payment-service:${{ github.sha }} .
+        run: |
+          docker build -t payment-service:${{ github.sha }} .
+          docker tag payment-service:${{ github.sha }} payment-service:latest

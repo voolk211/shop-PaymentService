@@ -4,6 +4,7 @@ import com.shop.paymentservice.exception.ExceptionBody;
 import com.shop.paymentservice.exception.ExternalServiceException;
 import com.shop.paymentservice.exception.ExternalServiceUnavailableException;
 import com.shop.paymentservice.exception.ResourceNotFoundException;
+import com.shop.paymentservice.exception.KafkaDeliveryException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,11 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
+    @ExceptionHandler(KafkaDeliveryException.class)
+    public ResponseEntity<ExceptionBody> handleKafkaDelivery(KafkaDeliveryException e){
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE).body(new ExceptionBody(e.getMessage()));
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ExceptionBody> handleResourceNotFound(ResourceNotFoundException e){

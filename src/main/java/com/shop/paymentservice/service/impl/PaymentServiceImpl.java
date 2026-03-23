@@ -52,7 +52,7 @@ public class PaymentServiceImpl implements PaymentService {
 
         payment.setStatus(number % 2 == 0 ? PaymentStatus.SUCCESS : PaymentStatus.FAILED);
 
-        Payment savedPayment =  paymentRepository.save(payment);
+        Payment savedPayment = paymentRepository.save(payment);
 
         kafkaProducer.sendPaymentEvent(new PaymentEvent(
                 savedPayment.getOrderId(),
@@ -86,34 +86,28 @@ public class PaymentServiceImpl implements PaymentService {
     public BigDecimal getTotalSumOfPaymentsForUser(Long userId, LocalDateTime from, LocalDateTime to) {
         List<Criteria> criteriaList = criteriaListDateFromTo(from, to);
         criteriaList.add(Criteria.where("user_id").is(userId));
-
-        Aggregation aggregation = Aggregation.newAggregation(
-                Aggregation.match(new Criteria().andOperator(criteriaList)),
-                Aggregation.group().sum("payment_amount").as("totalSumOfPayments")
-        );
-        AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Payment.class), TotalSumOfPayments.class);
-        return Optional.ofNullable(results.getUniqueMappedResult())
-                .map(TotalSumOfPayments::getTotalSumOfPayments)
-                .orElse(BigDecimal.ZERO);
+        return calculateTotalSum(criteriaList);
     }
 
     @Override
     public BigDecimal getTotalSumOfPaymentsForAllUsers(LocalDateTime from, LocalDateTime to) {
-        List<Criteria> criteriaList = criteriaListDateFromTo(from, to);
+        return calculateTotalSum(criteriaListDateFromTo(from, to));
+    }
 
+    private BigDecimal calculateTotalSum(List<Criteria> criteriaList) {
         List<AggregationOperation> operations = new ArrayList<>();
-
         if (!criteriaList.isEmpty()) {
             operations.add(Aggregation.match(new Criteria().andOperator(criteriaList)));
         }
         operations.add(Aggregation.group().sum("payment_amount").as("totalSumOfPayments"));
 
         Aggregation aggregation = Aggregation.newAggregation(operations);
-
         AggregationResults<TotalSumOfPayments> results = mongoTemplate.aggregate(aggregation, mongoTemplate.getCollectionName(Payment.class), TotalSumOfPayments.class);
+
         return Optional.ofNullable(results.getUniqueMappedResult())
                 .map(TotalSumOfPayments::getTotalSumOfPayments)
                 .orElse(BigDecimal.ZERO);
+
     }
 
     private List<Criteria> criteriaListDateFromTo(LocalDateTime from, LocalDateTime to){
