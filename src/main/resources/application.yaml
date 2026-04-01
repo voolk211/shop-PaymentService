@@ -1,0 +1,50 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.liquibase.LiquibaseAutoConfiguration
+  cloud:
+    openfeign:
+      client:
+        config:
+          random-number:
+            connect-timeout: 3000
+            read-timeout: 5000
+      circuitbreaker:
+        enabled: true
+  liquibase:
+    enabled: false
+  kafka:
+    bootstrap-servers: ${SPRING_KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      acks: all
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      retries: 3
+      properties:
+        spring.json.add.type.headers: false
+        retry.backoff.ms: 1000
+        request.timeout.ms: 5000
+        delivery.timeout.ms: 10000
+    topics:
+      payment-events: queuing.payment.created
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      random-number:
+        sliding-window-size: 10
+        failure-rate-threshold: 50
+        wait-duration-in-open-state:
+          seconds: 10
+        permitted-number-of-calls-in-half-open-state: 3
+
+internal:
+  internal-secret: ${INTERNAL_SECRET}
+
+external:
+  random-number-api:
+    url: ${EXTERNAL_API_URL:https://www.randomnumberapi.com/api/v1.0}
