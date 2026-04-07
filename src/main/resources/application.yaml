@@ -42,6 +42,22 @@ resilience4j:
           seconds: 10
         permitted-number-of-calls-in-half-open-state: 3
 
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
+
 internal:
   internal-secret: ${INTERNAL_SECRET}
 
