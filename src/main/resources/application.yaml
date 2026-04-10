@@ -15,6 +15,7 @@ spring:
             read-timeout: 5000
       circuitbreaker:
         enabled: true
+
   liquibase:
     enabled: false
   kafka:
