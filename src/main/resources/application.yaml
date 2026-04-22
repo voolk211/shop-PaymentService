@@ -15,6 +15,7 @@ spring:
             read-timeout: 5000
       circuitbreaker:
         enabled: true
+
   liquibase:
     enabled: false
   kafka:
@@ -41,6 +42,22 @@ resilience4j:
         wait-duration-in-open-state:
           seconds: 10
         permitted-number-of-calls-in-half-open-state: 3
+
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
+      show-details: never
+  health:
+    livenessState:
+      enabled: true
+    readinessState:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include: health
 
 internal:
   internal-secret: ${INTERNAL_SECRET}
